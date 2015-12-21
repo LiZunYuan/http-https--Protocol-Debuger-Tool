@@ -1,5 +1,7 @@
 #coding=utf-8
-               # Python 标准库 urllib2 的使用细节
+__author__ = 'zunyuan.li'
+
+# Python 标准库 urllib2 的使用细节
 #                       http://www.cnblogs.com/yuxc/archive/2011/08/01/2123995.html
 # httplib2
 # http://www.cnblogs.com/qq78292959/archive/2013/04/01/2993133.html
@@ -7,19 +9,24 @@
 # urplib2 proxy
 # http://blog.csdn.net/wklken/article/details/7364390
 
-__author__ = 'zunyuan.li'
+
 
 import  sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 import urllib2
 import urllib
+import json
 import wx
 from MyInfo import AboutMe
 # from AHDropTarget import AHDropTarget
 import os
 import subprocess
 import sqlite3
+
+"""
+主界面
+"""
 
 class AHFrame(wx.Frame):
     def __init__(self, parent, title):
@@ -134,14 +141,17 @@ class AHFrame(wx.Frame):
         self.panel.SetSizer(self.vbox)
 
         # 加一些默认值
-        self.urlTextCtrl.write("http://www.baidu.com")
-        self.portTextCtrl.write("80")
+        self.urlTextCtrl.SetValue("http://api.beibei.com/gateway/route.html?keyword=%25E5%258F%258C%25E7%25A6%25B9&gender_age=1&client_info=%7B%0A%20%20%22screen%22%20%3A%20%22375x667%22%2C%0A%20%20%22os%22%20%3A%20%229.1%22%2C%0A%20%20%22platform%22%20%3A%20%22iPhone%22%2C%0A%20%20%22model%22%20%3A%20%22iPhone%22%2C%0A%20%20%22udid%22%20%3A%20%22d41d8cd98f00b204e9800998ecf8427e689ac76a%22%2C%0A%20%20%22bd%22%20%3A%20%22App%20Store%22%2C%0A%20%20%22version%22%20%3A%20%223.6.0%22%0A%7D&sign=FFB1C6B49E2B6ECD0B4DE0F1838B8596&brand_ids=0&timestamp=1450663657&filter_sellout=0&session=1bab524926101700567296453fbe8&source=mainViewController&cat_ids=0&page=1&page_size=30&sort=hot&method=beibei.item.search")
+        self.urlTextCtrl.SetValue("http://www.baidu.com")
+        self.portTextCtrl.SetValue("80")
 
 
 
 
     # 开始请求网络
     def startRequest(self,event):
+        self.outputTextCtrl.SetValue("Loading...")
+
         enable_proxy = False
         proxy_handler = urllib2.ProxyHandler({"http" : self.ProxyTextCtrl.GetValue()})
         null_proxy_handler = urllib2.ProxyHandler({})
@@ -159,7 +169,20 @@ class AHFrame(wx.Frame):
         response = urllib2.urlopen(self.urlTextCtrl.GetValue())
         html = response.read()
 
-        self.outputTextCtrl.SetValue(html)
+        # 转json
+        try:
+            # html = html.decode("GB2312").encode("gbk")
+            jsonHtml = json.loads(html);
+            formatHtml = json.dumps(jsonHtml, ensure_ascii=False, indent=4);
+        except Exception,ex:
+            formatHtml = html
+            print "出错"
+
+
+
+        # print formatHtml
+
+        self.outputTextCtrl.SetValue(formatHtml)
 
         # format
         # opener = urllib2.build_opener(null_proxy_handler)

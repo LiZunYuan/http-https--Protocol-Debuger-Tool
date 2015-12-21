@@ -1,5 +1,5 @@
 #coding=utf-8
-__author__ = 'answer-huang'
+__author__ = 'zunyuan.li'
 
 import wx
 import sys
@@ -29,7 +29,7 @@ class AboutMe(wx.Dialog):
         wx.HyperlinkCtrl(self, -1, 'answerhuang.duapp.com', 'http://answerhuang.duapp.com', pos=(85, 200))
 
         wx.StaticText(self, -1, 'GitHub:', pos=(28, 230))
-        wx.HyperlinkCtrl(self, -1, 'dSYMTools', 'https://github.com/answer-huang/dSYMTools', pos=(85, 230))
+        wx.HyperlinkCtrl(self, -1, 'http/https Protocol Debuger', 'https://github.com/LiZunYuan/http-https-Debuger-Tool', pos=(85, 230))
 
     def _create_round_corner_mask(self, size, radius, border=0):
         (w, h) = size
