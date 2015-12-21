@@ -143,15 +143,12 @@ class AHFrame(wx.Frame):
         proxy_handler = urllib2.ProxyHandler({"http" : self.ProxyTextCtrl.GetValue()})
         null_proxy_handler = urllib2.ProxyHandler({})
 
-
-
         if self.UseProxyCheckBox.IsChecked():
             opener = urllib2.build_opener(proxy_handler)
         else:
             opener = urllib2.build_opener(null_proxy_handler)
 
         urllib2.install_opener(opener)
-
 
         response = urllib2.urlopen(self.urlTextCtrl.GetValue())
         html = response.read()
@@ -165,10 +162,7 @@ class AHFrame(wx.Frame):
             formatHtml = html
             print "出错"
 
-
-
         # print formatHtml
-
         self.outputTextCtrl.SetValue(formatHtml)
 
         # format
@@ -187,16 +181,11 @@ class AHFrame(wx.Frame):
         #
         # formatHtml = response.read()
 
-
-
         # self.outputTextCtrl.write(formatHtml)
-
 
     def stopRequest(self,event):
         response = urllib2.urlopen(self.urlTextCtrl.GetValue())
         html = response.read()
-
-
 
     #显示关于我的界面
     def OnAboutMe(self, event):
