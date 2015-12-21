@@ -19,7 +19,6 @@ import urllib
 import json
 import wx
 from MyInfo import AboutMe
-# from AHDropTarget import AHDropTarget
 import os
 import subprocess
 import sqlite3
@@ -58,15 +57,7 @@ class AHFrame(wx.Frame):
 
         #创建panel
         self.panel = wx.Panel(self)
-        # self.panel.SetDropTarget(AHDropTarget(self))
-
-        #self.font = wx.Font(18, wx.SCRIPT, wx.BOLD, wx.LIGHT)
-        #self.selectedPath = wx.StaticText(self.panel, -1, u'请将xcarchive文件拖拽到窗口中！', pos=(138, 300))
-        #self.selectedPath.SetFont(self.font)
-
         self.vbox = wx.BoxSizer(wx.VERTICAL)
-
-
 
         # 第一行
         hbox1 = wx.BoxSizer(wx.HORIZONTAL)
@@ -134,10 +125,6 @@ class AHFrame(wx.Frame):
         hbox4.Add(self.outputTextCtrl, 2, wx.EXPAND)
 
         self.vbox.Add(hbox4, 2, wx.EXPAND | wx.ALL, 5)
-
-        self.panel.Bind(wx.EVT_ENTER_WINDOW, self.OnEnterWindow)
-        self.panel.Bind(wx.EVT_LEAVE_WINDOW, self.OnLeaveWindow)
-        self.panel.Bind(wx.EVT_MOTION, self.OnMotion)
         self.panel.SetSizer(self.vbox)
 
         # 加一些默认值
@@ -211,55 +198,6 @@ class AHFrame(wx.Frame):
 
 
 
-    def OnEnterWindow(self, event):
-        event.Skip()
-
-    def OnLeaveWindow(self, event):
-        event.Skip()
-
-    def OnMotion(self, event):
-        if event.Dragging() and event.LeftIsDown():
-            print '按住了鼠标移动'
-        event.Skip()
-
-    def ShowFileType(self):
-        self.fileTypeLB.Set(list([os.path.basename(filepath) for filepath in self.filesList]))
-
-    def getdSYMFileFromSqlite(self):
-        if os.path.exists('dsym.db'):
-            cx = sqlite3.connect('dsym.db')
-            cu = cx.cursor()
-            ##查询
-            cu.execute("select * from archives")
-            for dsym in cu.fetchall():
-                if not os.path.exists(dsym[0]):
-                    execSql = "delete from archives where file_path ='%s'" % dsym[0]
-                    cu.execute(execSql)
-                    cx.commit()
-                else:
-                    self.filesList.append(dsym[0])#[dsym[0] for dsym in cu.fetchall() if os.path.exists(dsym[0])]
-            print self.filesList
-            self.ShowFileType()
-
-    #获取最后需要的文件地址
-    def getFilePath(self, rootPath):
-        if rootPath.endswith("dSYM"):
-            self.dsymFilePath = rootPath
-            fileName = os.path.basename(rootPath)
-        else:
-            dsymsPath = os.path.join(rootPath,'dSYMs')
-            listFiles = os.listdir(dsymsPath)
-            for fileName in listFiles:
-                if fileName.endswith('dSYM'):
-                    #dsym文件路径
-                    self.dsymFilePath = os.path.join(dsymsPath, fileName)
-
-        appPath = os.path.join(self.dsymFilePath,'Contents/Resources/DWARF')
-        if os.path.isdir(appPath):
-            if len(os.listdir(appPath)) is not 0:
-                #命令行中需要的文件路径
-                self.appFilePath = os.path.join(appPath,os.listdir(appPath)[0])
-
     #显示关于我的界面
     def OnAboutMe(self, event):
         aboutMe = AboutMe(self)
@@ -269,6 +207,6 @@ class AHFrame(wx.Frame):
 versions = '0.1'
 if __name__ == '__main__':
     app = wx.App(redirect=False)
-    frame = AHFrame(None, 'Http/Https Protocol Debuger V' + versions)
+    frame = AHFrame(None, 'Http/Https Protocol Debuger' + ' v' + versions)
     frame.ShowWithEffect(True)
     app.MainLoop()
