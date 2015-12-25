@@ -1,6 +1,6 @@
 #coding=utf-8
 
-#打包命令 : python setup.py py2app
+#打包命令 : python setup2app.py py2app
 
 __author__ = 'zunyuan.li'
 
